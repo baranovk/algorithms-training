@@ -1,4 +1,6 @@
-﻿namespace AlgorithmsTraining.Numbers
+﻿using System.Collections.Generic;
+
+namespace AlgorithmsTraining.Numbers
 {
     public static class NumberOfSmallestUnoccupiedChair
     {
@@ -47,9 +49,9 @@
            Constraints:
 
            n == times.length
-           2 <= n <= 104
+           2 <= n <= 10^4
            times[i].length == 2
-           1 <= arrivali < leavingi <= 105
+           1 <= arrival_i < leaving_i <= 10^5
            0 <= targetFriend <= n - 1
            Each arrivali time is distinct.
          */
@@ -58,7 +60,90 @@
 
         public static int SmallestChair(int[][] times, int targetFriend)
         {
+            var friends = times
+                .Select((x, i) => new Friend { Number = i, ArrivalTime = x[0], LeavingiTime = x[1] })
+                .OrderBy(x => x.ArrivalTime)
+                .ToArray();
+
+            var freeChairs = new Stack<int>(Enumerable.Range(0, times.Length).Reverse());
+            var occipiedChairs = new LinkedList<OccupiedChair>();
+
+            foreach (var friend in friends)
+            {
+                var chair = PickChairFor(friend, occipiedChairs, freeChairs);
+                if (friend.Number == targetFriend) return chair;
+            }
+
             return default;
         }
+
+        private static int PickChairFor(Friend friend, LinkedList<OccupiedChair> occupiedChairs, Stack<int> freeChairs)
+        {
+            OccupiedChair newOccupiedChair;
+
+            if (null != occupiedChairs.First && occupiedChairs.First.Value.FreeTime <= friend.ArrivalTime)
+            {
+                var minNode = occupiedChairs.First;
+
+                for (
+                    var node = occupiedChairs.First.Next;
+                    null != node && node.Value.FreeTime <= friend.ArrivalTime;
+                    minNode = minNode.Value.Number > node.Value.Number ? node : minNode, node = node.Next
+                );
+
+                newOccupiedChair = new OccupiedChair { Number = minNode.Value.Number, FreeTime = friend.LeavingiTime };
+                occupiedChairs.Remove(minNode);
+            }
+            else
+            {
+                newOccupiedChair = new OccupiedChair { Number = freeChairs.Pop(), FreeTime = friend.LeavingiTime };
+            }
+
+            InsertOccupiedChair(newOccupiedChair, occupiedChairs);
+            return newOccupiedChair.Number;
+        }
+
+        private static void InsertOccupiedChair(OccupiedChair chair, LinkedList<OccupiedChair> occupiedChairs)
+        {
+            var newNode = new LinkedListNode<OccupiedChair>(chair);
+
+            for (var node = occupiedChairs.First; node != null; node = node.Next)
+            {
+                if (chair.FreeTime < node.Value.FreeTime)
+                {
+                    occupiedChairs.AddBefore(node, newNode);
+                    return;
+                }
+                else if (chair.FreeTime == node.Value.FreeTime && chair.Number < node.Value.Number)
+                {
+                    occupiedChairs.AddBefore(node, newNode);
+                    return;
+                }
+                else if (chair.FreeTime == node.Value.FreeTime && chair.Number > node.Value.Number)
+                {
+                    occupiedChairs.AddAfter(node, newNode);
+                    return;
+                }
+
+            }
+                
+            occupiedChairs.AddLast(newNode);
+        }
+        
+        private readonly struct OccupiedChair
+        {
+            public int Number { get; init; }
+
+            public int FreeTime { get; init; }
+        }
+    }
+
+    public readonly struct Friend
+    {
+        public int ArrivalTime { get; init; }
+
+        public int LeavingiTime { get; init; }
+
+        public int Number { get; init; }
     }
 }
