@@ -3,15 +3,15 @@ using AlgorithmsTraining.Numbers;
 
 namespace AlgorithmsTraining.Tests.Numbers;
 
-public class NumberOfSmallestUnoccupiedChairTests
+public class NumberOfSmallestUnoccupiedChairOptimizedTests
 {
-    private readonly NumberOfSmallestUnoccupiedChair _sut = new();
+    private readonly NumberOfSmallestUnoccupiedChairOptimized _sut = new();
 
     [Test]
     public void Test_1()
     {
         var times = new int[][] { new[] { 3, 10 }, new[] { 1, 5 }, new[] { 2, 6 } };
-        var chair = _sut.SmallestChair(times, 0);
+        var chair = _sut.SmallestChairOptimized(times, 0);
         Assert.That(chair, Is.EqualTo(2));
     }
 
@@ -19,7 +19,7 @@ public class NumberOfSmallestUnoccupiedChairTests
     public void Test_2()
     {
         var times = new int[][] { new[] { 1, 4 }, new[] { 2, 3 }, new[] { 4, 6 } };
-        var chair = _sut.SmallestChair(times, 1);
+        var chair = _sut.SmallestChairOptimized(times, 1);
         Assert.That(chair, Is.EqualTo(1));
     }
 
@@ -27,7 +27,7 @@ public class NumberOfSmallestUnoccupiedChairTests
     public void Test_3()
     {
         var times = new int[][] { new[] { 1, 5 }, new[] { 4, 6 }, new[] { 2, 3 } };
-        var chair = _sut.SmallestChair(times, 2);
+        var chair = _sut.SmallestChairOptimized(times, 2);
         Assert.That(chair, Is.EqualTo(1));
     }
 
@@ -35,7 +35,7 @@ public class NumberOfSmallestUnoccupiedChairTests
     public void Test_4()
     {
         var times = new int[][] { new[] { 1, 6 }, new[] { 2, 5 }, new[] { 3, 4 }, new[] { 5, 7 } };
-        var chair = _sut.SmallestChair(times, 3);
+        var chair = _sut.SmallestChairOptimized(times, 3);
         Assert.That(chair, Is.EqualTo(1));
     }
 
@@ -43,7 +43,7 @@ public class NumberOfSmallestUnoccupiedChairTests
     public void Test_5()
     {
         var times = new int[][] { new[] { 1, 6 }, new[] { 2, 4 }, new[] { 3, 5 }, new[] { 5, 7 } };
-        var chair = _sut.SmallestChair(times, 3);
+        var chair = _sut.SmallestChairOptimized(times, 3);
         Assert.That(chair, Is.EqualTo(1));
     }
 
@@ -51,7 +51,7 @@ public class NumberOfSmallestUnoccupiedChairTests
     public void Test_6()
     {
         var times = new int[][] { new[] { 1, 5 }, new[] { 2, 5 }, new[] { 3, 6 }, new[] { 5, 7 } };
-        var chair = _sut.SmallestChair(times, 3);
+        var chair = _sut.SmallestChairOptimized(times, 3);
         Assert.That(chair, Is.EqualTo(0));
     }
 
@@ -79,7 +79,7 @@ public class NumberOfSmallestUnoccupiedChairTests
          */
 
         // { Number: 2, ArrivalTime: 44118, LeavingiTime: 52565}
-        var chair = _sut.SmallestChair(times, 6);
+        var chair = _sut.SmallestChairOptimized(times, 6);
         Assert.That(chair, Is.EqualTo(2));
     }
 
@@ -91,7 +91,7 @@ public class NumberOfSmallestUnoccupiedChairTests
             new[] { 6, 7 }, new[] { 3, 4 }, new[] { 7, 8 }, new[] { 13, 14 }, new[] { 15, 16 }, new[] { 14, 15 }, 
             new[] { 10, 11 }, new[] { 11, 12 }, new[] { 2, 3 }, new[] { 16, 17 } };
 
-        var chair = _sut.SmallestChair(times, 15);
+        var chair = _sut.SmallestChairOptimized(times, 15);
         Assert.That(chair, Is.EqualTo(0));
     }
 

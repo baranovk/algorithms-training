@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
 
 namespace AlgorithmsTraining.Numbers
 {
-    public class NumberOfSmallestUnoccupiedChair
+    public class NumberOfSmallestUnoccupiedChairOptimized
     {
         #region Description
 
@@ -57,32 +56,34 @@ namespace AlgorithmsTraining.Numbers
            Each arrivali time is distinct.
          */
 
-        /*
-         * Runtime: 368ms Beats 71.06%
-         * Memory: 62.63 MB Beats 90.13%
-         * 
-         * Runtime: 364ms Beats 73.02%
-         * Memory: 64.93 MB Beats 90.13%
-         */
-
-        #endregion
+        #endregion        
 
         [Benchmark]
         [ArgumentsSource(nameof(Times))]
-        public int SmallestChair(int[][] times, int targetFriend)
+        public int SmallestChairOptimized(int[][] times, int targetFriend)
         {
-            var friends = times
-                .Select((x, i) => new Friend { Number = i, ArrivalTime = x[0], LeavingiTime = x[1] })
-                .OrderBy(x => x.ArrivalTime)
-                .ToArray();
+            const int MaxFriends = 10000;
 
-            var freeChairs = new Stack<int>(Enumerable.Range(0, times.Length).Reverse());
-            var occipiedChairs = new LinkedList<OccupiedChair>();
-
-            foreach (var friend in friends)
+            unsafe
             {
-                var chair = PickChairFor(friend, occipiedChairs, freeChairs);
-                if (friend.Number == targetFriend) return chair;
+                Span<Friend> friends = stackalloc Friend[MaxFriends];
+
+                for (int i = 0; i < times.Length; i++)
+                {
+                    friends[i] = new Friend { Number = i, ArrivalTime = times[i][0], LeavingiTime = times[i][1] };
+                }
+
+                friends = friends[..times.Length];
+                friends.Sort((x, y) => x.ArrivalTime.CompareTo(y.ArrivalTime));
+
+                var nextFreeChair = 0;
+                var occupiedChairs = new LinkedList<OccupiedChair>();
+
+                for (int i = 0; i < friends.Length; i++)
+                {
+                    var chair = PickChairFor(friends[i], occupiedChairs, ref nextFreeChair);
+                    if (friends[i].Number == targetFriend) return chair;
+                }
             }
 
             return default;
@@ -100,7 +101,7 @@ namespace AlgorithmsTraining.Numbers
             yield return new object[] { times, 6 };
         }
 
-        private static int PickChairFor(Friend friend, LinkedList<OccupiedChair> occupiedChairs, Stack<int> freeChairs)
+        private static int PickChairFor(Friend friend, LinkedList<OccupiedChair> occupiedChairs, ref int nextFreeChair)
         {
             OccupiedChair newOccupiedChair;
 
@@ -119,7 +120,7 @@ namespace AlgorithmsTraining.Numbers
             }
             else
             {
-                newOccupiedChair = new OccupiedChair { Number = freeChairs.Pop(), FreeTime = friend.LeavingiTime };
+                newOccupiedChair = new OccupiedChair { Number = nextFreeChair++, FreeTime = friend.LeavingiTime };
             }
 
             InsertOccupiedChair(newOccupiedChair, occupiedChairs);
@@ -159,14 +160,5 @@ namespace AlgorithmsTraining.Numbers
 
             public int FreeTime { get; init; }
         }
-    }
-
-    public readonly struct Friend
-    {
-        public int ArrivalTime { get; init; }
-
-        public int LeavingiTime { get; init; }
-
-        public int Number { get; init; }
     }
 }
