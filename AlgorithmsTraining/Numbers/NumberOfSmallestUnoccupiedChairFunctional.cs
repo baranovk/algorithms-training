@@ -1,10 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
+using AlgorithmsTraining.Functional;
+using static AlgorithmsTraining.Functional.F;
 
 namespace AlgorithmsTraining.Numbers
 {
-    public class NumberOfSmallestUnoccupiedChair
+    /// <summary>
+    /// Trying to implement algorithm in functional style - just for exercise
+    /// Implementation is not pure functional: for example occupied chairs linked list is modified in TryPickOccupiedChair,
+    /// but it is close to
+    /// </summary>
+    public class NumberOfSmallestUnoccupiedChairFunctional
     {
         #region Description
 
@@ -68,34 +73,38 @@ namespace AlgorithmsTraining.Numbers
 
         #endregion
 
+        private readonly struct State
+        {
+            public int NextFreeChair { get; init; }
+
+            public LinkedList<OccupiedChair> OccupiedChairs { get; init; }
+
+            public Option<int> TargetFriendChair { get; init; }
+        }
+
         [Benchmark]
         [ArgumentsSource(nameof(Times))]
         public int SmallestChair(int[][] times, int targetFriend)
-        {
-            var sw = new Stopwatch();
-
-            sw.Start();
-
-            var friends = times
+            => times
                 .Select((x, i) => new Friend { Number = i, ArrivalTime = x[0], LeavingiTime = x[1] })
                 .OrderBy(x => x.ArrivalTime)
-                .ToArray();
+                .Aggregate(
+                    new State { NextFreeChair = 0, OccupiedChairs = new LinkedList<OccupiedChair>(), TargetFriendChair = None },
+                    (state, friend) =>
+                    {
+                        var chair = TryPickOccupiedChair(friend, state.OccupiedChairs)
+                                    .Match(() => OccupyNextFreeChair(friend, state.OccupiedChairs, state.NextFreeChair), _ => _);
 
-            sw.Stop();
-
-            Console.WriteLine($"Friends sort = {sw.Elapsed.TotalNanoseconds}");
-
-            var freeChairs = new Stack<int>(Enumerable.Range(0, times.Length).Reverse());
-            var occipiedChairs = new LinkedList<OccupiedChair>();
-
-            foreach (var friend in friends)
-            {
-                var chair = PickChairFor(friend, occipiedChairs, freeChairs);
-                if (friend.Number == targetFriend) return chair;
-            }
-
-            return default;
-        }
+                        return new State
+                        {
+                            NextFreeChair = state.NextFreeChair == chair ? state.NextFreeChair + 1 : state.NextFreeChair,
+                            OccupiedChairs = state.OccupiedChairs,
+                            TargetFriendChair = friend.Number == targetFriend ? chair : None
+                        };
+                    },
+                    state => None != state.TargetFriendChair)
+                .TargetFriendChair
+                .ValueUnsafe();
 
         public static IEnumerable<object[]> Times()
         {
@@ -109,28 +118,30 @@ namespace AlgorithmsTraining.Numbers
             yield return new object[] { times, 6 };
         }
 
-        private static int PickChairFor(Friend friend, LinkedList<OccupiedChair> occupiedChairs, Stack<int> freeChairs)
+        private static Option<int> TryPickOccupiedChair(Friend friend, LinkedList<OccupiedChair> occupiedChairs)
         {
-            OccupiedChair newOccupiedChair;
-
-            if (null != occupiedChairs.First && occupiedChairs.First.Value.FreeTime <= friend.ArrivalTime)
+            if (null == occupiedChairs.First || occupiedChairs.First.Value.FreeTime > friend.ArrivalTime)
             {
-                var minNode = occupiedChairs.First;
-
-                for (
-                    var node = occupiedChairs.First.Next;
-                    null != node && node.Value.FreeTime <= friend.ArrivalTime;
-                    minNode = minNode.Value.Number > node.Value.Number ? node : minNode, node = node.Next
-                );
-
-                newOccupiedChair = new OccupiedChair { Number = minNode.Value.Number, FreeTime = friend.LeavingiTime };
-                occupiedChairs.Remove(minNode);
-            }
-            else
-            {
-                newOccupiedChair = new OccupiedChair { Number = freeChairs.Pop(), FreeTime = friend.LeavingiTime };
+                return None;
             }
 
+            var minNode = occupiedChairs.First;
+
+            for (
+                var node = occupiedChairs.First.Next;
+                null != node && node.Value.FreeTime <= friend.ArrivalTime;
+                minNode = minNode.Value.Number > node.Value.Number ? node : minNode, node = node.Next
+            ) ;
+
+            var newOccupiedChair = new OccupiedChair { Number = minNode.Value.Number, FreeTime = friend.LeavingiTime };
+            occupiedChairs.Remove(minNode);
+            InsertOccupiedChair(newOccupiedChair, occupiedChairs);
+            return newOccupiedChair.Number;
+        }
+
+        private static int OccupyNextFreeChair(Friend friend, LinkedList<OccupiedChair> occupiedChairs, int nextFreeChair)
+        {
+            var newOccupiedChair = new OccupiedChair { Number = nextFreeChair, FreeTime = friend.LeavingiTime };
             InsertOccupiedChair(newOccupiedChair, occupiedChairs);
             return newOccupiedChair.Number;
         }
@@ -177,5 +188,5 @@ namespace AlgorithmsTraining.Numbers
 
             public int Number { get; init; }
         }
-    }    
+    }
 }

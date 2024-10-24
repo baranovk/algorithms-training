@@ -3,9 +3,9 @@ using AlgorithmsTraining.Numbers;
 
 namespace AlgorithmsTraining.Tests.Numbers;
 
-public class NumberOfSmallestUnoccupiedChairTests
+public class NumberOfSmallestUnoccupiedChairFunctionalTests
 {
-    private readonly NumberOfSmallestUnoccupiedChair _sut = new();
+    private readonly NumberOfSmallestUnoccupiedChairFunctional _sut = new();
 
     [Test]
     public void Test_1()
@@ -65,8 +65,6 @@ public class NumberOfSmallestUnoccupiedChairTests
             new[] {48548, 48656}, new[] {87396, 94825}, new[] {55273, 81868}, new[] { 75629, 91467 }
         };
 
-        //Console.WriteLine(OrderAndPrintTimes(times));
-
         /*
          * { Number: 5, ArrivalTime: 21695, LeavingiTime: 67063}  { Number: 0, ArrivalTime: 33889, LeavingiTime: 98676} 
          * { Number: 2, ArrivalTime: 44118, LeavingiTime: 52565}  { Number: 12, ArrivalTime: 48548, LeavingiTime: 48656} 
@@ -93,18 +91,5 @@ public class NumberOfSmallestUnoccupiedChairTests
 
         var chair = _sut.SmallestChair(times, 15);
         Assert.That(chair, Is.EqualTo(0));
-    }
-
-    public static string OrderAndPrintTimes(int[][] times)
-    {
-        var sb = new StringBuilder();
-
-        times
-            .Select((x, i) => (Number : i, ArrivalTime : x[0], LeavingiTime : x[1]))
-            .OrderBy(x => x.ArrivalTime)
-            .ToList()
-            .ForEach(f => sb.Append($"{{ Number: {f.Number}, ArrivalTime: {f.ArrivalTime}, LeavingiTime: {f.LeavingiTime}}} "));
-
-        return sb.ToString();
     }
 }

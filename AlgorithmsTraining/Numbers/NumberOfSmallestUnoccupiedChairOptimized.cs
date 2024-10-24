@@ -1,4 +1,5 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using System.Diagnostics;
+using BenchmarkDotNet.Attributes;
 
 namespace AlgorithmsTraining.Numbers
 {
@@ -63,6 +64,7 @@ namespace AlgorithmsTraining.Numbers
         public int SmallestChairOptimized(int[][] times, int targetFriend)
         {
             const int MaxFriends = 10000;
+            var sw = new Stopwatch();
 
             unsafe
             {
@@ -74,7 +76,11 @@ namespace AlgorithmsTraining.Numbers
                 }
 
                 friends = friends[..times.Length];
+                sw.Start();
                 friends.Sort((x, y) => x.ArrivalTime.CompareTo(y.ArrivalTime));
+                sw.Stop();
+
+                Console.WriteLine($"Friends sort = {sw.Elapsed.TotalNanoseconds}");
 
                 var nextFreeChair = 0;
                 var occupiedChairs = new LinkedList<OccupiedChair>();
@@ -159,6 +165,15 @@ namespace AlgorithmsTraining.Numbers
             public int Number { get; init; }
 
             public int FreeTime { get; init; }
+        }
+
+        private readonly struct Friend
+        {
+            public int ArrivalTime { get; init; }
+
+            public int LeavingiTime { get; init; }
+
+            public int Number { get; init; }
         }
     }
 }
