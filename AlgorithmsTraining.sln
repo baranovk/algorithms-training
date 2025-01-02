@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlgorithmsTraining", "Algor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlgorithmsTraining.Tests", "AlgorithmsTraining.Tests\AlgorithmsTraining.Tests.csproj", "{28896840-474E-4BB1-BF79-5AA65B282AF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlgorithmsTraining.Benchmark", "AlgorithmsTraining.Benchmark\AlgorithmsTraining.Benchmark.csproj", "{579E2B71-CF97-40E0-A57C-2CF1D0E1E138}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlgorithmsTraining.Benchmark", "AlgorithmsTraining.Benchmark\AlgorithmsTraining.Benchmark.csproj", "{579E2B71-CF97-40E0-A57C-2CF1D0E1E138}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

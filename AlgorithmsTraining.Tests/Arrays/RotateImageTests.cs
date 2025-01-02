@@ -1,5 +1,5 @@
-﻿using System;
-using AlgorithmsTraining.Arrays;
+﻿using AlgorithmsTraining.Arrays;
+using static AlgorithmsTraining.Tests.Utility;
 
 namespace AlgorithmsTraining.Tests.Arrays;
 
@@ -24,21 +24,6 @@ internal class RotateImageTests
             new int[] { 9, 6, 3 }
         };
 
-        Assert.That(ArraysAreEqual(matrix, expected), Is.True);
-    }
-
-    private static bool ArraysAreEqual(int[][] arr1, int[][] arr2)
-    {
-        if (arr1.Length != arr2.Length) { return false; }
-
-        for (var i = 0; i < arr1.Length; i++)
-        {
-            for (var j = 0; j < arr1.Length; j++)
-            {
-                if (arr1[i][j] != arr2[i][j]) { return false; }
-            }
-        }
-
-        return true;
+        Assert.That(MatrixesAreEqual(matrix, expected), Is.True);
     }
 }
