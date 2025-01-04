@@ -34,6 +34,18 @@ internal static class Utility
         return true;
     }
 
+    public static bool ArraysAreEqualWithoutOrder<T>(IList<T> arr1, IList<T> arr2, IEqualityComparer<T>? comparer = null)
+    {
+        if (arr1.Count != arr2.Count) { return false; }
+
+        for (var i = 0; i < arr1.Count; i++)
+        {
+            if (!arr2.Any(x => null != comparer ? comparer.Equals(arr1[i], x) : arr1[i]!.Equals(x))) { return false; }
+        }
+
+        return true;
+    }
+
     public static string ReadFromResources(string resourceName)
     {
         var assembly = Assembly.GetExecutingAssembly();
