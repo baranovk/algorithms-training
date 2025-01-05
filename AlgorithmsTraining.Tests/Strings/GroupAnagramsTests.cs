@@ -26,20 +26,4 @@ internal class GroupAnagramsTests
         Assert.That(result.Count, Is.EqualTo(1));
         Assert.That(result.Any(r => ArraysAreEqualWithoutOrder(r, new string[] { "a" })));
     }
-
-    [Test]
-    public void TestCalculateKey()
-    {
-        var t1 = CalculateKey("duh");
-        var t2 = CalculateKey("ill");
-        Assert.That(t1, Is.Not.EqualTo(t2));
-    }
-
-    private static int CalculateKey(string str) 
-    {
-        var groups = str.GroupBy(_ => _);
-        var t0 = groups.Select(g => (100 + (g.Key - 'a')) * g.Count());
-        var t1 = t0.Sum();
-        return t1;
-    }
 }
