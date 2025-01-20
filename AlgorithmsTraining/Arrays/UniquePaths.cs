@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Diagnostics.Tracing.Analysis.GC;
 
 namespace AlgorithmsTraining.Arrays;
 
@@ -39,8 +40,19 @@ namespace AlgorithmsTraining.Arrays;
  */
 public static class UniquePaths
 {
-    public static int Solution(int m, int n)
+    public static int Solution(int m, int n) => (1 == m && 1 == n) ? 1 : CountPathsFrom(m - 1, n - 1, n, stackalloc int[n * m]);
+
+    private static int CountPathsFrom(int i, int j, int columns, Span<int> memo)
     {
-        return default;
+        if (0 == i && 0 == j) { return 1; }
+        var memoIndex = i * columns + j;
+
+        if (0 == memo[memoIndex])
+        {
+            memo[memoIndex] = (0 < i ? CountPathsFrom(i - 1, j, columns, memo) : 0)
+                + (0 < j ? CountPathsFrom(i, j - 1, columns, memo) : 0);
+        }
+
+        return memo[memoIndex];
     }
 }
