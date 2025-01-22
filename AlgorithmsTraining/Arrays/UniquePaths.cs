@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Diagnostics.Tracing.Analysis.GC;
-
-namespace AlgorithmsTraining.Arrays;
+﻿namespace AlgorithmsTraining.Arrays;
 
 /*
  * 62. Unique Paths
@@ -37,6 +30,14 @@ namespace AlgorithmsTraining.Arrays;
    Constraints:
 
    1 <= m, n <= 100
+
+   Runtime
+   0ms
+   Beats 100.00%
+
+   Memory
+   28.98MB
+   Beats 16.44%
  */
 public static class UniquePaths
 {
