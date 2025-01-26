@@ -47,7 +47,7 @@ public static class MergeIntervals
         {
             if (intervals[i][0] > intervalEnd)
             {
-                result.Add(new int[] { intervalStart, intervalEnd });
+                result.Add([intervalStart, intervalEnd]);
                 intervalStart = intervals[i][0];
                 intervalEnd = intervals[i][1];
             }

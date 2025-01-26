@@ -33,9 +33,76 @@ public static class InsertInterval
         - intervals is sorted by starti in ascending order.
         - newInterval.length == 2
         - 0 <= start <= end <= 10^5
+
+       Runtime
+       0ms
+       Beats 100.00%
+
+       Memory
+       50.71MB
+       Beats 38.00%
+
      */
     public static int[][] Insert(int[][] intervals, int[] newInterval)
     {
-        throw new NotImplementedException();
+        var length = intervals.GetLength(0);
+        if (0 == length) return [newInterval];
+
+        int[][] result;
+
+        if (newInterval[0] > intervals[length - 1][1]) 
+        {
+            result = new int[length + 1][];
+            Array.Copy(intervals, result, length);
+            result[^1] = newInterval;
+            return result;
+        }
+
+        if (newInterval[1] < intervals[0][0])
+        {
+            result = new int[length + 1][];
+            Array.Copy(intervals, 0, result, 1, length);
+            result[0] = newInterval;
+            return result;
+        }
+
+        for (int i = 0; i < length; i++)
+        {
+            if (newInterval[0] > intervals[i][1] && newInterval[1] < intervals[i + 1][0])
+            {
+                result = new int[length + 1][];
+                Array.Copy(intervals, 0, result, 0, i + 1);
+                result[i + 1] = newInterval;
+                Array.Copy(intervals, i + 1, result, i + 2, length - i - 1);
+                return result;
+            }
+            else if ((newInterval[0] >= intervals[i][0] && newInterval[0] <= intervals[i][1])
+                || (newInterval[0] <= intervals[i][0] && newInterval[1] >= intervals[i][0]))
+            {
+                newInterval = MergeIntervals(intervals, i, newInterval, out var mergedIntervalsCount);
+                result = new int[length - (mergedIntervalsCount - 1)][];
+                Array.Copy(intervals, 0, result, 0, i);
+                result[i] = newInterval;
+                Array.Copy(intervals, i + mergedIntervalsCount, result, i + 1, length - (i + mergedIntervalsCount));
+                return result;
+            }
+        }
+
+        return intervals;
+    }
+
+    private static int[] MergeIntervals(int[][] intervals, int offset, int[] newInterval, out int mergedIntervalsCount)
+    {
+        mergedIntervalsCount = 1;
+        var intervalStart = Math.Min(intervals[offset][0], newInterval[0]);
+        var intervalEnd = Math.Max(intervals[offset][1], newInterval[1]);
+
+        for (int i = offset + 1; i < intervals.GetLength(0) && intervalEnd >= intervals[i][0]; i++)
+        {
+            intervalEnd = Math.Max(intervals[i][1], intervalEnd);
+            mergedIntervalsCount++;
+        }
+
+        return [intervalStart, intervalEnd];
     }
 }

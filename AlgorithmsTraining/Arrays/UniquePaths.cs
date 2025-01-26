@@ -50,7 +50,8 @@ public static class UniquePaths
 
         if (0 == memo[memoIndex])
         {
-            memo[memoIndex] = (0 < i ? CountPathsFrom(i - 1, j, columns, memo) : 0)
+            memo[memoIndex] = 
+                  (0 < i ? CountPathsFrom(i - 1, j, columns, memo) : 0)
                 + (0 < j ? CountPathsFrom(i, j - 1, columns, memo) : 0);
         }
 
