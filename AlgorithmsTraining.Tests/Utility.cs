@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using BenchmarkDotNet.Validators;
 
 namespace AlgorithmsTraining.Tests;
 
@@ -22,6 +23,10 @@ internal static class Utility
         return true;
     }
 
+    public static Dictionary<T, int> BuildArrayHistogram<T>(T[] nums, IEqualityComparer<T>? comparer = null) where T: notnull
+        => nums.Aggregate(new Dictionary<T, int>(comparer),
+            (accDict, num) => { accDict[num] = accDict.TryGetValue(num, out var count) ? count + 1 : 1; return accDict; });
+
     public static bool ArraysAreEqual<T>(IList<T> arr1, IList<T> arr2, IEqualityComparer<T>? comparer = null)
     {
         if (arr1.Count != arr2.Count) { return false; }
@@ -34,13 +39,15 @@ internal static class Utility
         return true;
     }
 
-    public static bool ArraysAreEqualWithoutOrder<T>(IList<T> arr1, IList<T> arr2, IEqualityComparer<T>? comparer = null)
+    public static bool ArraysAreEqualWithoutOrder<T>(IList<T> arr1, IList<T> arr2, IEqualityComparer<T>? comparer = null) where T : notnull
     {
         if (arr1.Count != arr2.Count) { return false; }
+        var histogram = BuildArrayHistogram([.. arr2], comparer);
 
         for (var i = 0; i < arr1.Count; i++)
         {
-            if (!arr2.Any(x => null != comparer ? comparer.Equals(arr1[i], x) : arr1[i]!.Equals(x))) { return false; }
+            if (!histogram.TryGetValue(arr1[i], out var count) || 0 == count) { return false; }
+            histogram[arr1[i]] = count - 1;
         }
 
         return true;

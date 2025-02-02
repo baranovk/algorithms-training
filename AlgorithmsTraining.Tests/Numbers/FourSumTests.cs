@@ -3,7 +3,7 @@ using static AlgorithmsTraining.Tests.Utility;
 
 namespace AlgorithmsTraining.Tests.Numbers;
 
-internal class FourSumTests
+internal partial class FourSumTests
 {
     [Test]
     public void FourSum_Should_FindFourSum_0()
@@ -30,4 +30,8 @@ internal class FourSumTests
         Assert.That(result.Count, Is.EqualTo(1));
         Assert.That(result.Any(r => ArraysAreEqual(r, [2, 2, 2, 2, 2])), Is.True);
     }
+
+    private static Dictionary<int, int> BuildHistogram(int[] nums)
+        => nums.Aggregate(new Dictionary<int, int>(),
+            (accDict, num) => { accDict[num] = accDict.TryGetValue(num, out var count) ? count + 1 : 1; return accDict; });
 }

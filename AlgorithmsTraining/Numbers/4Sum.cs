@@ -1,4 +1,6 @@
-﻿namespace AlgorithmsTraining.Numbers;
+﻿using System.Collections.Generic;
+
+namespace AlgorithmsTraining.Numbers;
 
 public static class _4Sum
 {
@@ -33,5 +35,52 @@ public static class _4Sum
     public static IList<IList<int>> Solution(int[] nums, int target)
     {
         throw new NotImplementedException();
+    }
+
+    public static IList<IList<int>> FindThreeSumSets(Span<int> nums, int sum, Dictionary<int, int> histogram, HashSet<int> processedReminders)
+    {
+        var sets = new List<IList<int>>();
+
+        for (int i = 0; i < nums.Length - 2; i++)
+        {
+            var reminder = sum - nums[i];
+            if (processedReminders.Contains(reminder)) { continue; }
+
+            histogram[nums[i]]--;
+            var twoSets = FindTwoSumSets(nums.Slice(i + 1, nums.Length - 1 - i), reminder, histogram);
+
+            foreach (var set in twoSets)
+            {
+                set.Add(nums[i]);
+                sets.Add(set);
+            }
+            
+            processedReminders.Add(reminder);
+        }
+
+        return sets;
+    }
+
+    // каждый ключ в histogram показывает, сколько еще таких ключей осталось в обрабатываемой части массива - nums
+    public static IList<IList<int>> FindTwoSumSets(Span<int> nums, int sum, Dictionary<int, int> histogram)
+    {
+        var sets = new List<IList<int>>();
+        var alreadyIncludedInSets = new HashSet<int>();
+
+        for (int i = 0; i < nums.Length; i++)
+        {
+            var reminder = sum - nums[i];
+
+            if (alreadyIncludedInSets.Contains(nums[i]) 
+                || alreadyIncludedInSets.Contains(reminder)
+                || !(histogram.TryGetValue(reminder, out var count) && count > (nums[i] == reminder ? 1 : 0)))
+            { continue; }
+
+            alreadyIncludedInSets.Add(nums[i]);
+            alreadyIncludedInSets.Add(reminder);
+            sets.Add([nums[i], reminder]);
+        }
+
+        return sets;
     }
 }
