@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 
 namespace AlgorithmsTraining.Numbers
 {
@@ -23,69 +24,57 @@ namespace AlgorithmsTraining.Numbers
         public static IList<IList<int>> ThreeSum(int[] nums, int sum)
         {
             var threeSets = new List<IList<int>>();
-            var processed = new Dictionary<int, bool>();
-
-            var dict = new Dictionary<int, int>();
-
+            var processed = new HashSet<int>();
+            var histogram = new Dictionary<int, int>();
+            
             foreach (var t in nums)
             {
-                if (dict.ContainsKey(t))
-                {
-                    dict[t]++;
-                }
-                else
-                {
-                    dict.Add(t, 1);
-                }
+                if (!histogram.TryAdd(t, 1)) { histogram[t]++; }
             }
 
             for (var i = 0; i < nums.Length - 2; i++)
             {
-                if (processed.ContainsKey(nums[i])) continue;
+                if (processed.Contains(nums[i])) continue;
 
-                var reminder = sum - nums[i];
-                var twoSets = TwoSum(nums, reminder, i + 1, nums.Length - 1, dict, processed);
+                threeSets.AddRange(
+                    BuildTwoSumSets(nums, sum - nums[i], i + 1, histogram, processed)
+                        .Select(s => { s.Add(nums[i]); return s; })
+                );
 
-                foreach (var set in twoSets)
-                {
-                    set.Add(nums[i]);
-                    threeSets.Add(set);
-                }
-
-                processed.Add(nums[i], true);
+                processed.Add(nums[i]);
             }
 
             return threeSets;
         }
 
-        public static IList<IList<int>> TwoSum(int[] nums, int sum, int startIndex, int endIndex, Dictionary<int, int> dict, Dictionary<int, bool> processed)
+        public static List<IList<int>> BuildTwoSumSets(int[] nums, int sum, int startIndex, Dictionary<int, int> histogram, HashSet<int> processed)
         {
             var sets = new List<IList<int>>();
-            var alreadyIncludedInSets = new Dictionary<int, bool>();
+            var alreadyIncludedInSets = new HashSet<int>();
 
-            for (var i = startIndex; i <= endIndex; i++)
+            for (var i = startIndex; i <= nums.Length - 1; i++)
             {
-                if (alreadyIncludedInSets.ContainsKey(nums[i]) || processed.ContainsKey(nums[i])) continue;
+                if (alreadyIncludedInSets.Contains(nums[i]) || processed.Contains(nums[i])) continue;
 
-                var useCurNumberCount = dict[nums[i]];
+                var useCurNumberCount = histogram[nums[i]];
                 useCurNumberCount--;
                 var reminder = sum - nums[i];
 
-                if (!dict.ContainsKey(reminder) || alreadyIncludedInSets.ContainsKey(reminder)) continue;
+                if (!histogram.ContainsKey(reminder) || alreadyIncludedInSets.Contains(reminder)) continue;
 
                 if (nums[i] != reminder || 0 < useCurNumberCount)
                 {
-                    if (!processed.ContainsKey(reminder))
+                    if (!processed.Contains(reminder))
                     {
-                        sets.Add(new List<int> { nums[i], reminder });
+                        sets.Add([nums[i], reminder]);
                     }
 
-                    alreadyIncludedInSets.Add(reminder, true);
+                    alreadyIncludedInSets.Add(reminder);
                 }
 
-                if (!alreadyIncludedInSets.ContainsKey(nums[i]))
+                if (!alreadyIncludedInSets.Contains(nums[i]))
                 {
-                    alreadyIncludedInSets.Add(nums[i], true);
+                    alreadyIncludedInSets.Add(nums[i]);
                 }
             }
 
