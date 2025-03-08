@@ -77,8 +77,14 @@ namespace AlgorithmsTraining.Misc;
       - 1 <= path.length <= 3000
       - path consists of English letters, digits, period '.', slash '/' or '_'.
       - path is a valid absolute Unix path.
-   
-   
+       
+    Runtime
+    6ms
+    Beats 20.89%
+
+    Memory
+    42.84MB
+    Beats 35.03%
  */
 public static class SimplifyPath
 {
@@ -87,21 +93,18 @@ public static class SimplifyPath
         var pathParts = new Stack<ReadOnlyMemory<char>>();
         var spath = path.AsMemory();
 
-        for (int i = 0, folderBase = 0, folderLength = 0; i < spath.Length; i++)
+        for (int i = 0; i < spath.Length; i++)
         {
             switch (path[i])
             {
                 case '/':
-                    if (folderLength > 0) { pathParts.Push(spath.Slice(folderBase, folderLength)); }
-                    ProcessSlashes(spath[i..], ref i);
-                    folderBase = i;
-                    folderLength = 0;
+                    ProcessSlashes(spath, ref i);
                     break;
                 case '.':
-                    ProcessPeriods(spath[i..], pathParts, ref i);
+                    ProcessPeriods(spath, pathParts, ref i);
                     break;
                 default:
-                    folderLength++;
+                    ProcessFolder(spath, pathParts, ref i);
                     break;
             }
         }
@@ -109,7 +112,7 @@ public static class SimplifyPath
         var resultStack = new Stack<ReadOnlyMemory<char>>();
         while (pathParts.Count > 0) { resultStack.Push(pathParts.Pop()); }
 
-        return 0 == pathParts.Count ? "/" : resultStack.Aggregate(new StringBuilder(), (sb, part) => sb.Append($"/{part}")).ToString();
+        return 0 == resultStack.Count ? "/" : resultStack.Aggregate(new StringBuilder(), (sb, part) => sb.Append($"/{part}")).ToString();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -120,7 +123,7 @@ public static class SimplifyPath
         var nextCharIndex = -1;
 
         while (++nextCharIndex < slice.Length && '/' == span[nextCharIndex]) ;
-        @base += nextCharIndex;
+        @base += nextCharIndex - 1;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -129,23 +132,39 @@ public static class SimplifyPath
         var slice = path[@base..];
         var span = slice.Span;
         var nextCharIndex = -1;
-        var periodCount = 0;
+        var charCount = 0;
 
-        while (++nextCharIndex < slice.Length && '.' == span[nextCharIndex]) { periodCount++; }
+        while (++nextCharIndex < slice.Length && '.' == span[nextCharIndex]) { charCount++; }
 
-        switch (periodCount)
+        switch (charCount)
         {
             case 1:
-                // nothing to do, current directory
+                while (nextCharIndex < slice.Length && '/' != span[nextCharIndex]) { charCount++; nextCharIndex++; }
+                if (1 < charCount) { pathParts.Push(slice[..charCount]); }
                 break;
             case 2:
-                pathParts.TryPop(out _);
+                while (nextCharIndex < slice.Length && '/' != span[nextCharIndex]) { charCount++; nextCharIndex++; }
+                if (2 == charCount) { pathParts.TryPop(out _); } else { pathParts.Push(slice[..charCount]); }
                 break;
             default:
-                pathParts.Push(slice[..periodCount]);
+                while (nextCharIndex < slice.Length && '/' != span[nextCharIndex]) { charCount++; nextCharIndex++; }
+                pathParts.Push(slice[..charCount]);
                 break;
         }
 
-        @base += nextCharIndex;
+        @base += nextCharIndex - 1;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void ProcessFolder(ReadOnlyMemory<char> path, Stack<ReadOnlyMemory<char>> pathParts, ref int @base)
+    {
+        var slice = path[@base..];
+        var span = slice.Span;
+        var nextCharIndex = -1;
+        var charCount = 0;
+
+        while (++nextCharIndex < slice.Length && '/' != span[nextCharIndex]) { charCount++; }
+        pathParts.Push(slice[..charCount]);
+        @base += nextCharIndex - 1;
     }
 }
