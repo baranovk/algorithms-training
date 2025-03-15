@@ -10,7 +10,7 @@ internal class SpiralMatrixTests
     {
         var matrix = new int[][]
         {
-            new int[] { 1 }
+            [1]
         };
 
         var result = SpiralMatrix.SpiralOrder(matrix);

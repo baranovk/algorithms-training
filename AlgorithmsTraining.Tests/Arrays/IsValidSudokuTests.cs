@@ -1,23 +1,41 @@
 ﻿using System.Collections;
+using AlgorithmsTraining.Arrays;
 
 namespace AlgorithmsTraining.Tests.Arrays;
 
 internal class IsValidSudokuTests
 {
-    [TestCaseSource(nameof(TestCases))]
+    [Test]
     public void Solution_Should_ValidateSudoku()
     {
+        char[][] board =
+        [
+            ['5','3','.','.','7','.','.','.','.'],
+            ['6','.','.','1','9','5','.','.','.'],
+            ['.','9','8','.','.','.','.','6','.'],
+            ['8','.','.','.','6','.','.','.','3'],
+            ['4','.','.','8','.','3','.','.','1'],
+            ['7','.','.','.','2','.','.','.','6'],
+            ['.','6','.','.','.','.','2','8','.'],
+            ['.','.','.','4','1','9','.','.','5'],
+            ['.','.','.','.','8','.','.','7','9'],
+        ];
 
-    }
+        Assert.That(IsValidSudoku.Solution(board), Is.True);
 
-    private static IEnumerable TestCases()
-    {
-        yield return new TestCaseData(3, 7).Returns(28);
-        yield return new TestCaseData(1, 2).Returns(1);
-        yield return new TestCaseData(1, 3).Returns(1);
-        yield return new TestCaseData(2, 2).Returns(2);
-        yield return new TestCaseData(2, 3).Returns(3);
-        yield return new TestCaseData(3, 2).Returns(3);
-        yield return new TestCaseData(3, 7).Returns(28);
+        board =
+        [
+            ['8','3','.','.','7','.','.','.','.'],
+            ['6','.','.','1','9','5','.','.','.'],
+            ['.','9','8','.','.','.','.','6','.'],
+            ['8','.','.','.','6','.','.','.','3'],
+            ['4','.','.','8','.','3','.','.','1'],
+            ['7','.','.','.','2','.','.','.','6'],
+            ['.','6','.','.','.','.','2','8','.'],
+            ['.','.','.','4','1','9','.','.','5'],
+            ['.','.','.','.','8','.','.','7','9'],
+        ];
+
+        Assert.That(IsValidSudoku.Solution(board), Is.False);
     }
 }

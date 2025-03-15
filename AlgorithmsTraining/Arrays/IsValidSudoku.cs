@@ -54,6 +54,14 @@
     - board.length == 9
     - board[i].length == 9
     - board[i][j] is a digit 1-9 or '.'.
+
+    Runtime
+    2ms
+    Beats 87.47%
+
+    Memory
+    47.92MB
+    Beats 84.11%
  */
 public static class IsValidSudoku
 {
@@ -62,8 +70,8 @@ public static class IsValidSudoku
     public static bool Solution(char[][] board)
     {
         // ASSERT: board.GetLength(0) - кол-во строк
-        Span<byte> row = stackalloc byte[Size];
-        Span<byte> column = stackalloc byte[Size];
+        Span<byte> row = stackalloc byte[Size + 1];
+        Span<byte> column = stackalloc byte[Size + 1];
 
         for (var i = 0; i < Size; i++, row.Clear(), column.Clear())
         {
@@ -81,7 +89,7 @@ public static class IsValidSudoku
             }
         }
 
-        Span<byte> square = stackalloc byte[Size];
+        Span<byte> square = stackalloc byte[Size + 1];
 
         for (int rowbase = 0; rowbase < Size; rowbase += 3)
         {
