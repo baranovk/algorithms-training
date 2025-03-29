@@ -43,6 +43,28 @@ public static class CombinationSum
 {
     public static IList<IList<int>> Solution(int[] candidates, int target)
     {
-        throw new NotImplementedException();
+        Array.Sort(candidates);
+        var combinations = new List<IList<int>>();
+        FindCombinations(combinations, candidates.AsSpan(), target, new Stack<int>());
+        return combinations;
+    }
+
+    private static void FindCombinations(IList<IList<int>> accumulator, Span<int> slice, int target, Stack<int> combination)
+    {
+        for (int i = 0; i < slice.Length && slice[i] <= target; i++)
+        {
+            combination.Push(slice[i]);
+
+            if (slice[i] == target)
+            {
+                accumulator.Add([.. combination]);
+            }
+            else
+            {
+                FindCombinations(accumulator, slice[i..], target - slice[i], combination);
+            }
+
+            combination.Pop();
+        }
     }
 }
