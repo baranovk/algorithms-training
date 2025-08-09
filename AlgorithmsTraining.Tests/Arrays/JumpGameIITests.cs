@@ -6,13 +6,7 @@ namespace AlgorithmsTraining.Tests.Arrays;
 internal class JumpGameIITests
 {
     [TestCaseSource(nameof(TestCases))]
-    //public int Min_Jumps(int[] nums) => JumpGameII.MinJumps(nums);
-    public int Min_Jumps(int[] nums)
-    {
-        JumpGameII.MinJumps_1(nums);
-        var t = JumpGameII.MinJumps(nums);
-        return t;
-    }
+    public int Min_Jumps(int[] nums) => JumpGameII.MinJumps(nums);
 
     private static IEnumerable TestCases()
     {
