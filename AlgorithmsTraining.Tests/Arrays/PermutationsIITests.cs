@@ -6,7 +6,7 @@ namespace AlgorithmsTraining.Tests.Arrays;
 internal class PermutationsIITests
 {
     [TestCaseSource(nameof(TestCases))]
-    public void Permutations_Tests(int[] nums, IList<IList<int>> expectedResult)
+    public void PermutationsII_Tests(int[] nums, IList<IList<int>> expectedResult)
     {
         var result = PermutationsII.PermuteUnique(nums);
         Assert.That(result, Is.EquivalentTo(expectedResult));
