@@ -19,5 +19,19 @@ namespace AlgorithmsTraining.Tests.Lists
 
             return -1;
         }
+
+        public static int TraverseToEnd(ListNode head)
+        {
+            if (null == head) return 0;
+            var count = 1;
+
+            while (null != head.next)
+            {
+                head = head.next;
+                count++;
+            }
+
+            return count;
+        }
     }
 }
