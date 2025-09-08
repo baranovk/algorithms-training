@@ -1,4 +1,4 @@
-﻿namespace AlgorithmsTraining.Tests.Arrays;
+﻿namespace AlgorithmsTraining.Arrays;
 
 /*
  * 78. Subsets

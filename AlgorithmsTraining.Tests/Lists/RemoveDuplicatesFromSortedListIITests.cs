@@ -54,4 +54,15 @@ internal class RemoveDuplicatesFromSortedListIITests
         Assert.That(ListUtils.GetNodeValue(head, 1), Is.EqualTo(2));
         Assert.That(ListUtils.GetNodeValue(head, 2), Is.EqualTo(5));
     }
+
+    [Test]
+    public void RemoveDuplicatesFromSortedListII_Test_6()
+    {
+        var head = new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(3, new ListNode(4, new ListNode(4, new ListNode(5)))))));
+        head = RemoveDuplicatesFromSortedListII.DeleteDuplicates(head);
+
+        Assert.That(ListUtils.GetNodeValue(head, 0), Is.EqualTo(1));
+        Assert.That(ListUtils.GetNodeValue(head, 1), Is.EqualTo(2));
+        Assert.That(ListUtils.GetNodeValue(head, 2), Is.EqualTo(5));
+    }
 }
