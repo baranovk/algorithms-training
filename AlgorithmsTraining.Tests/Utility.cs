@@ -32,6 +32,7 @@ internal static class Utility
 
         for (var i = 0; i < arr1.Count; i++)
         {
+            if (null == arr1[i] && null == arr2[i]) { continue; }
             if (null == arr1[i] || (null != comparer ? !comparer.Equals(arr1[i], arr2[i]) : !arr1[i]!.Equals(arr2[i]))) { return false; }
         }
 
