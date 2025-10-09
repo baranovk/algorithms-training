@@ -30,6 +30,29 @@
  */
 public static class UniqueBinarySearchTreesII
 {
+    public static int NumTrees(int n)
+    {
+        var trees = new List<TreeNode>();
+        var values = Enumerable.Range(1, n).ToArray();
+        var permutations = new List<IList<int>>();
+        var memo = values.ToDictionary(v => v, _ => new HashSet<int>());
+
+        Permute(0, values, new Queue<int>(values), permutations);
+
+        foreach (var permutation in permutations)
+        {
+            var root = BuildBinarySearchTree(permutation);
+            var hash = ComputeTreeHash(root);
+
+            if (memo[root.val].Contains(hash)) { continue; }
+
+            memo[root.val].Add(hash);
+            trees.Add(root);
+        }
+
+        return trees.Count;
+    }
+
     public static IList<TreeNode> GenerateTrees(int n)
     {
         var trees = new List<TreeNode>();
