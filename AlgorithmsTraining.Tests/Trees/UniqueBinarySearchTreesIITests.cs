@@ -37,11 +37,6 @@ internal class UniqueBinarySearchTreesIITests
 
     private static IEnumerable TestCases()
     {
-        //yield return new TestCaseData(
-        //    1,
-        //    new object[][] { [1, null, null] }
-        //);
-
         yield return new TestCaseData(
             3,
             new object[][] 
