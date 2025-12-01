@@ -1,0 +1,75 @@
+﻿using System.Collections;
+using AlgorithmsTraining.Trees;
+
+namespace AlgorithmsTraining.Tests.Trees
+{
+    internal class BinaryTreeFromTwoTraversalsIITests
+    {
+        [TestCaseSource(nameof(TestCases))]
+        public void BinaryTreeFromTwoTraversalsII_Tests(int[] postorder, int[] inorder, object[] expectedResult)
+        {
+            var root = BinaryTreeFromTwoTraversalsII.BuildTree(inorder, postorder);
+
+            var crawler = new BreadthFirstTreeCrawler(root);
+            var values = new List<object>();
+
+            foreach (var node in crawler)
+            {
+                values.Add(node?.val);
+            }
+
+            Assert.That(values, Is.EquivalentTo(expectedResult));
+        }
+
+        private static IEnumerable TestCases()
+        {
+            yield return new TestCaseData(
+                new int[] { 1, 2, 3 },
+                new int[] { 1, 3, 2 },
+                new object[] { 2, 1, 3, null, null, null, null }
+            );
+
+            yield return new TestCaseData(
+                new int[] { 2, 3 },
+                new int[] { 3, 2 },
+                new object[] { 3, null, 2, null, null }
+            );
+
+            yield return new TestCaseData(
+                new int[] { 1, 3 },
+                new int[] { 1, 3 },
+                new object[] { 3, 1, null, null, null }
+            );
+
+            //yield return new TestCaseData(
+            //    new int[] { 2, 1 },
+            //    new int[] { 1, 2 },
+            //    new object[] { 1, null, 2, null, null }
+            //);
+
+            //yield return new TestCaseData(
+            //    new int[] { 9, 3 },
+            //    new int[] { 3, 9 },
+            //    new object[] { 3, 9, null, null, null }
+            //);
+
+            //yield return new TestCaseData(
+            //    new int[] { 10, 7, 5, 8, 20, 15, 25 },
+            //    new int[] { 5, 7, 8, 10, 15, 20, 25 },
+            //    new object[] { 10, 7, 20, 5, 8, 15, 25, null, null, null, null, null, null, null, null }
+            //);
+
+            //yield return new TestCaseData(
+            //    new int[] { 1, 3, 2 },
+            //    new int[] { 1, 2, 3 },
+            //    new object[] { 2, 1, 3, null, null, null, null }
+            //);
+
+            //yield return new TestCaseData(
+            //    new int[] { 9, 15, 7, 20, 3 },
+            //    new int[] { 9, 3, 15, 20, 7 },
+            //    new object[] { 3, 9, 20, null, null, 15, 7, null, null, null, null }
+            //);
+        }
+    }
+}
