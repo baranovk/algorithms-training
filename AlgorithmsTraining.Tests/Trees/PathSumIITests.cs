@@ -20,6 +20,12 @@ internal class PathSumIITests
     private static IEnumerable TestCases()
     {
         yield return new TestCaseData(
+            new object[] { },
+            1,
+            new List<List<int>>()
+        );
+
+        yield return new TestCaseData(
             new object[] { 1, 2, 3, null, null, null, null },
             5,
             new List<List<int>>()
