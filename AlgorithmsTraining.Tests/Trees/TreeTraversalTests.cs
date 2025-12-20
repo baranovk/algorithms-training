@@ -9,7 +9,7 @@ internal class TreeTraversalTests
     {
         var values = new object[] { 1, 2, 3, 4, 5, 6, 7 };
         var root = TreeUtils.BuildBinaryTree(values);
-        var crawler = new BreadthFirstTreeCrawler(root);
+        var crawler = new BreadthFirstTreeCrawler<TreeNode>(root);
         var expected = new object[] { 1, 2, 3, 4, 5, 6, 7, null, null, null, null, null, null, null, null };
         var values2 = new object[expected.Length];
         var index = -1;
@@ -27,7 +27,7 @@ internal class TreeTraversalTests
     {
         var values = new object[] { 1, 2, null, null, 3, null, 5 };
         var root = TreeUtils.BuildBinaryTree(values);
-        var crawler = new BreadthFirstTreeCrawler(root);
+        var crawler = new BreadthFirstTreeCrawler<TreeNode>(root);
         var expected = new object[] { 1, 2, null, null, 3, null, 5, null, null };
         var values2 = new object[expected.Length];
         var index = -1;
@@ -45,7 +45,7 @@ internal class TreeTraversalTests
     {
         var values = new object[] { 1, 2, 3, 4, 5, 6, 7 };
         var root = TreeUtils.BuildBinaryTree(values);
-        var crawler = new BreadthFirstTreeCrawler(root);
+        var crawler = new BreadthFirstTreeCrawler<TreeNode>(root);
         var expected = new object[] { 1, 2, 4, null, null, 5, null, null, 3, 6, null, null, 7, null, null };
         var values2 = new object[expected.Length];
         var index = -1;
@@ -63,7 +63,7 @@ internal class TreeTraversalTests
     {
         var values = new object[] { 1, 2, null, null, 3, null, 5 };
         var root = TreeUtils.BuildBinaryTree(values);
-        var crawler = new BreadthFirstTreeCrawler(root);
+        var crawler = new BreadthFirstTreeCrawler<TreeNode>(root);
         var expected = new object[] { 1, 2, null, 3, null, 5, null, null, null };
         var values2 = new object[expected.Length];
         var index = -1;

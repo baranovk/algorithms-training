@@ -2,18 +2,18 @@
 
 namespace AlgorithmsTraining.Trees;
 
-public class BreadthFirstTreeCrawler : IEnumerable<TreeNode>
+public class BreadthFirstTreeCrawler<T> : IEnumerable<BinaryTreeNode<T>> where T : BinaryTreeNode<T>
 {
-    public BreadthFirstTreeCrawler(TreeNode root)
+    public BreadthFirstTreeCrawler(BinaryTreeNode<T> root)
     {
         Root = root;
     }
 
-    protected TreeNode Root { get; private set; }
+    protected BinaryTreeNode<T> Root { get; private set; }
 
-    public IEnumerator<TreeNode> GetEnumerator()
+    public IEnumerator<BinaryTreeNode<T>> GetEnumerator()
     {
-        var queue = new Queue<TreeNode>();
+        var queue = new Queue<BinaryTreeNode<T>>();
         queue.Enqueue(Root);
 
         while (0 < queue.Count)

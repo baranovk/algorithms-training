@@ -30,6 +30,63 @@
             return root;
         }
 
+        public static Node BuildBinaryTreeWithNodes(object[] values)
+        {
+            if (!values.Any() || null == values[0]) return null;
+
+            Array.Reverse(values);
+            var stack = new Stack<object>(values);
+            var root = new Node(Convert.ToInt32(stack.Pop()));
+
+            var queue = new Queue<Node> ();
+            queue.Enqueue(root);
+
+            while (stack.Any())
+            {
+                var left = stack.Pop();
+                var right = stack.Any() ? stack.Pop() : null;
+
+                var current = queue.Dequeue();
+
+                current.left = null == left ? null : new Node(Convert.ToInt32(left));
+                current.right = null == right ? null : new Node(Convert.ToInt32(right));
+
+                if (null != current.left) queue.Enqueue(current.left);
+                if (null != current.right) queue.Enqueue(current.right);
+            }
+
+            return root;
+        }
+
+        public static T BuildBinaryTree<T>(object[] values, Func<object, T> nodeBuilder)
+            where T : BinaryTreeNode<T>
+        {
+            if (!values.Any() || null == values[0]) return null;
+
+            Array.Reverse(values);
+            var stack = new Stack<object>(values);
+            var root = nodeBuilder(Convert.ToInt32(stack.Pop()));
+
+            var queue = new Queue<T>();
+            queue.Enqueue(root);
+
+            while (stack.Any())
+            {
+                var left = stack.Pop();
+                var right = stack.Any() ? stack.Pop() : null;
+
+                var current = queue.Dequeue();
+
+                current.left = null == left ? null : nodeBuilder(Convert.ToInt32(left));
+                current.right = null == right ? null : nodeBuilder(Convert.ToInt32(right));
+
+                if (null != current.left) queue.Enqueue(current.left);
+                if (null != current.right) queue.Enqueue(current.right);
+            }
+
+            return root;
+        }
+
         public static TreeNodeExt BuildBinaryTreeExt(object[] values)
         {
             if (!values.Any() || null == values[0]) return null;

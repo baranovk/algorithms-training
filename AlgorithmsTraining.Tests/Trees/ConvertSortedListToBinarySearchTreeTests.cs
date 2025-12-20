@@ -12,7 +12,7 @@ namespace AlgorithmsTraining.Tests.Trees
             var list = BuildListFromArray(listValues);
             var root = ConvertSortedListToBinarySearchTree.SortedListToBST(list);
 
-            var crawler = new BreadthFirstTreeCrawler(root);
+            var crawler = new BreadthFirstTreeCrawler<TreeNode>(root);
             var values = new List<int?>();
 
             foreach (var node in crawler)

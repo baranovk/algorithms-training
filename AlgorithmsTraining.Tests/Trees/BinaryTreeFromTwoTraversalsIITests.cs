@@ -10,7 +10,7 @@ namespace AlgorithmsTraining.Tests.Trees
         {
             var root = BinaryTreeFromTwoTraversalsII.BuildTree(inorder, postorder);
 
-            var crawler = new BreadthFirstTreeCrawler(root);
+            var crawler = new BreadthFirstTreeCrawler<TreeNode>(root);
             var values = new List<object>();
 
             foreach (var node in crawler)

@@ -14,7 +14,7 @@ internal class UniqueBinarySearchTreesIITests
 
         foreach (var root in results)
         {
-            var crawler = new BreadthFirstTreeCrawler(root);
+            var crawler = new BreadthFirstTreeCrawler<TreeNode>(root);
             var values = new List<object>();
 
             foreach (var node in crawler)

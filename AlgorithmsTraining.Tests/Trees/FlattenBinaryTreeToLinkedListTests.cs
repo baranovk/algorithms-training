@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
 using AlgorithmsTraining.Trees;
 
 namespace AlgorithmsTraining.Tests.Trees
@@ -16,7 +11,7 @@ namespace AlgorithmsTraining.Tests.Trees
             var root = TreeUtils.BuildBinaryTree(treeDescription);
             FlattenBinaryTreeToLinkedList.Flatten(root);
 
-            var crawler = new BreadthFirstTreeCrawler(root);
+            var crawler = new BreadthFirstTreeCrawler<TreeNode>(root);
             var values = new List<int?>();
 
             foreach (var node in crawler)

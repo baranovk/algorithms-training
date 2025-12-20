@@ -12,7 +12,7 @@ internal class RecoverBinarySearchTreeTests
         var root = TreeUtils.BuildBinaryTree(treeDescription);
         RecoverBinarySearchTree.RecoverTree(root);
 
-        var crawler = new BreadthFirstTreeCrawler(root);
+        var crawler = new BreadthFirstTreeCrawler<TreeNode>(root);
         var values = new List<object>();
 
         foreach (var node in crawler)
