@@ -1,9 +1,9 @@
 ﻿namespace AlgorithmsTraining.Trees
 {
-    /* 116. Populating Next Right Pointers in Each Node
+    /*
+     * 117. Populating Next Right Pointers in Each Node II
 
-       You are given a perfect binary tree where all leaves are on the same level, 
-       and every parent has two children. The binary tree has the following definition:
+       Given a binary tree
 
        struct Node {
          int val;
@@ -11,39 +11,39 @@
          Node *right;
          Node *next;
        }
-       
-       Populate each next pointer to point to its next right node. If there is no next right 
-       node, the next pointer should be set to NULL.
-       
+
+       Populate each next pointer to point to its next right node. If there is no next right node, 
+       the next pointer should be set to NULL.
+
        Initially, all next pointers are set to NULL.
 
-       Input: root = [1,2,3,4,5,6,7]
-       Output: [1,#,2,3,#,4,5,6,7,#]
-       Explanation: Given the above perfect binary tree (Figure A), your function should populate 
-       each next pointer to point to its next right node, just like in Figure B. The serialized output is in level 
-       order as connected by the next pointers, with '#' signifying the end of each level.
-       
+       Example 1:
+
+       Input: root = [1,2,3,4,5,null,7]
+       Output: [1,#,2,3,#,4,5,7,#]
+       Explanation: Given the above binary tree (Figure A), your function should populate each next pointer to point to 
+       its next right node, just like in Figure B. The serialized output is in level order as connected by the next pointers, 
+       with '#' signifying the end of each level.
+
        Example 2:
-       
+
        Input: root = []
        Output: []
        
        Constraints:
        
-         [1] The number of nodes in the tree is in the range [0, 212 - 1].
-         [2] -1000 <= Node.val <= 1000
+         [1] The number of nodes in the tree is in the range [0, 6000].
+         [2] -100 <= Node.val <= 100
 
-      Example 1:
-
-     * Runtime
-       87 ms
-       Beats 70.85%
+       Runtime
+       100 ms
+       Beats 5.37%
 
        Memory
-       48.32 MB
-       Beats 11.19%
+       46.08 MB
+       Beats 29.27%
      */
-    public static class PopulatingNextRightPointersEachNode
+    public static class PopulatingNextRightPointersEachNodeII
     {
         public static Node Connect(Node root)
         {
