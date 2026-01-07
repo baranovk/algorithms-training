@@ -10,12 +10,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Arrays\Resources\best-time-to-buy-and-sell-stock-ii-001.txt" />
     <None Remove="Arrays\Resources\max-sub-arrays-testcase.txt" />
     <None Remove="Arrays\Resources\merge-intervals-testcase-001.txt" />
     <None Remove="Arrays\Resources\merge-intervals-testcase-002.txt" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Arrays\Resources\best-time-to-buy-and-sell-stock-ii-001.txt" />
     <EmbeddedResource Include="Arrays\Resources\max-sub-arrays-testcase.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
