@@ -22,6 +22,21 @@ internal static class Utility
         return true;
     }
 
+    public static bool MatrixesAreEqualWithoutOrder<T>(T[][] arr1, T[][] arr2, IEqualityComparer<T>? comparer = null) where T : notnull
+    {
+        if (arr1.Length != arr2.Length) { return false; }
+
+        for (var i = 0; i < arr1.Length; i++)
+        {
+            if (!ArraysAreEqualWithoutOrder(arr1[i], arr2[i], comparer))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public static Dictionary<T, int> BuildArrayHistogram<T>(T[] nums, IEqualityComparer<T>? comparer = null) where T: notnull
         => nums.Aggregate(new Dictionary<T, int>(comparer),
             (accDict, num) => { accDict[num] = accDict.TryGetValue(num, out var count) ? count + 1 : 1; return accDict; });
