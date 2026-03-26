@@ -72,8 +72,7 @@
             if (null == node) { return null; }
             if (WasVisited(node.val, ref visitMemo)) { return clones[node.val]; }
 
-            var clone = new Node(node.val);
-            clones[node.val] = clone;
+            var clone = clones[node.val] = new Node(node.val);
             MarkVisited(node.val, ref visitMemo);
 
             for (int i = 0; i < node.neighbors.Count; i++)
@@ -82,7 +81,7 @@
                 clone.neighbors.Add(neighborClone);
             }
             
-            return clones[node.val];
+            return clone;
         }
 
         private static bool WasVisited(int i, ref VisitMemo visitMemo)
@@ -95,10 +94,6 @@
             if (i <= 64) { visitMemo.Segment1 |= 1L << (i - 1); } else { visitMemo.Segment2 |= 1L << (i - 65); }
         }
 
-        private struct VisitMemo
-        {
-            public long Segment1;
-            public long Segment2;
-        }
+        private struct VisitMemo { public long Segment1; public long Segment2; }
     }
 }
