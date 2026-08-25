@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using AlgorithmsTraining.Lists;
+using static AlgorithmsTraining.Tests.Utility;
 
 namespace AlgorithmsTraining.Tests.Lists
 {
@@ -9,7 +10,7 @@ namespace AlgorithmsTraining.Tests.Lists
         public void MergeSortedLinkedLists_Tests(int[][] values, int[] expected)
         {
             var head = MergeSortedLinkedLists.MergeKLists(BuildList(values));
-            Assert.That(IsExpected(head, expected), Is.True);
+            Assert.That(ListIsMatch(head, expected), Is.True);
         }
 
         private static IEnumerable TestCases()
@@ -48,21 +49,6 @@ namespace AlgorithmsTraining.Tests.Lists
             }
 
             return nodeList;
-        }
-
-        private static bool IsExpected(ListNode head, int[] expected)
-        {
-            if (null == head && null == expected) { return true; }
-
-            var current = head;
-
-            for (int i = 0; i < expected.Length; i++)
-            {
-                if (current.val != expected[i]) { return false; }
-                current = current.next;
-            }
-
-            return true;
         }
     }
 }

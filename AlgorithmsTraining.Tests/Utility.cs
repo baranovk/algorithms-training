@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using AlgorithmsTraining.Lists;
 
 namespace AlgorithmsTraining.Tests;
 
@@ -75,5 +76,35 @@ internal static class Utility
         using var stream = assembly!.GetManifestResourceStream(resourceName);
         using var reader = new StreamReader(stream!);
         return reader.ReadToEnd();
+    }
+
+    public static bool ListIsMatch(ListNode head, int[] values)
+    {
+        if (null == head && null == values) { return true; }
+
+        var current = head;
+
+        for (int i = 0; i < values.Length; i++)
+        {
+            if (current.val != values[i]) { return false; }
+            current = current.next;
+        }
+
+        return true;
+    }
+
+    public static ListNode BuildList(int[] values)
+    {
+        if (0 == values.Length) { return null; }
+        ListNode head = new(values[0]);
+        var current = head;
+
+        for (int i = 1; i < values.Length; i++)
+        {
+            current.next = new ListNode(values[i]);
+            current = current.next;
+        }
+
+        return head;
     }
 }
