@@ -8,7 +8,7 @@ namespace AlgorithmsTraining.Tests.Strings
         [TestCaseSource(nameof(TestCases))]
         public void SubstringWithConcatenationOfAllWordsTests_Tests(string s, string[] words, IList<int> expectedIndexes)
         {
-            var indexes = SubstringWithConcatenationOfAllWords.FindSubstring(s, words);
+            var indexes = SubstringWithConcatenationOfAllWordsAlt.FindSubstring(s, words);
             Assert.That(indexes, Is.EqualTo(expectedIndexes));
         }
 

@@ -289,5 +289,183 @@
                 return false;
             }
         }
+
+        public static IList<int> FindSubstringAlt(string s, string[] words)
+        {
+            int wordLen = words[0].Length;
+            int wordsLen = words.Length;
+            if (s.Length < wordLen * wordsLen)
+            {
+                return new int[] { };
+            }
+
+            List<int> res = new List<int>();
+            Dictionary<string, int> requiredWordCount = new Dictionary<string, int>();
+
+            foreach (string w in words)
+            {
+                requiredWordCount[w] = requiredWordCount.GetValueOrDefault(w) + 1;
+            }
+
+            // wordLen = длина слова
+            // wordsLen = сколько слов
+            for (int offset = 0; offset < wordLen; ++offset)
+            {
+                Search(s, offset, wordLen, wordsLen, requiredWordCount, res);
+            }
+
+            return res;
+
+        }
+
+        private static void Search(
+            string s,
+            int offset,
+            int wordLen,
+            int wordsLen,
+            Dictionary<string, int> requiredWordCount,
+            List<int> res
+        )
+        {
+            // wordLen = длина слова
+            // wordsLen = сколько слов
+
+            int ws = offset;
+            int we = offset + wordLen;
+            Dictionary<string, int> windowWordCount = new Dictionary<string, int>();
+            int windowWordLen = 0;
+
+            while (we <= s.Length)
+            {
+                string w = s.Substring(we - wordLen, wordLen);
+                if (!requiredWordCount.ContainsKey(w))
+                {
+                    ws = we;
+                    we += wordLen;
+                    windowWordCount.Clear();
+                    windowWordLen = 0;
+                    continue;
+                }
+
+                windowWordCount[w] = windowWordCount.GetValueOrDefault(w) + 1;
+                windowWordLen++;
+                we += wordLen;
+
+                while (windowWordCount[w] > requiredWordCount[w])
+                {
+                    string wordToBeRemoved = s.Substring(ws, wordLen);
+                    windowWordCount[wordToBeRemoved]--;
+                    windowWordLen--;
+                    ws += wordLen;
+                }
+
+                if (windowWordLen == wordsLen)
+                {
+                    res.Add(ws);
+
+                    string wordToBeRemoved = s.Substring(ws, wordLen);
+                    windowWordCount[wordToBeRemoved]--;
+                    windowWordLen--;
+                    ws += wordLen;
+                }
+            }
+        }
+    }
+
+    public static class SubstringWithConcatenationOfAllWordsAlt
+    {
+        public static IList<int> FindSubstring(string s, string[] words)
+        {
+            var indexes = new List<int>();
+            Dictionary<string, int> wordCounts = words.Distinct().ToDictionary(w => w, w => 0);
+
+            if (1 == wordCounts.Count)
+            {
+                words = [string.Join(string.Empty, words)];
+                wordCounts = words.Distinct().ToDictionary(w => w, w => 0);
+            }
+
+            List<(int start, int end)> sequence = new(words.Length);
+            var offset = 0;
+            var wordLength = words[0].Length;
+
+            // aaaaaacccbbba
+            while (offset <= s.Length - words.Length * words[0].Length)
+            {
+                sequence.Clear();
+
+                if (HasSequence(s.AsSpan(offset), wordLength, offset, sequence, words.Length, wordCounts)
+                    && IsValidSequence(s, sequence, words, wordCounts))
+                {
+                    indexes.Add(sequence[0].start);
+                    offset = indexes[^1] + 1;
+                }
+                else if (0 == sequence.Count)
+                {
+                    break;
+                }
+                else
+                {
+                    offset = sequence[0].start == offset ? offset + 1 : sequence[0].start;
+                }
+            }
+
+            return indexes;
+        }
+
+        private static bool IsValidSequence(
+            string s,
+            IReadOnlyList<(int start, int end)> substrings,
+            string[] words,
+            Dictionary<string, int> counters)
+        {
+            InitCounters(words, counters);
+            var zerosCount = 0;
+            var span = s.AsSpan();
+
+            for (int i = 0; i < substrings.Count; i++)
+            {
+                var substring = span.Slice(substrings[i].start, substrings[i].end - substrings[i].start + 1).ToString();
+                if (0 == --counters[substring]) { zerosCount++; }
+            }
+
+            return zerosCount == counters.Count;
+        }
+
+        private static void InitCounters(string[] words, Dictionary<string, int> counters)
+        {
+            for (int i = 0; i < words.Length; i++)
+            {
+                counters[words[i]] = 0;
+            }
+
+            for (int i = 0; i < words.Length; i++)
+            {
+                counters[words[i]]++;
+            }
+        }
+
+        private static bool HasSequence(
+            ReadOnlySpan<char> span,
+            int wordLength,
+            int offset,
+            IList<(int start, int end)> sequence,
+            int sequenceLength,
+            Dictionary<string, int> wordFreq)
+        {
+            for (int i = 0, start = 0, length = 0; i < span.Length; i++, start = i, length = 0)
+            {
+                while (start <= span.Length - wordLength && wordFreq.ContainsKey(span.Slice(start, wordLength).ToString()) && length < sequenceLength)
+                {
+                    length++;
+                    sequence.Add((offset + start, offset + start + wordLength - 1));
+                    start += wordLength;
+                }
+
+                if (length == sequenceLength) { return true; } else { sequence.Clear(); }
+            }
+
+            return false;
+        }
     }
 }
